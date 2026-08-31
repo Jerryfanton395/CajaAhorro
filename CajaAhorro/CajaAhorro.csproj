@@ -13,7 +13,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\CajaAhorro.Application\CajaAhorro.Application.csproj" />
-    <ProjectReference Include="..\CajaAhorro.Domain\CajaAhorro.Domain.csproj" />
   </ItemGroup>
 
 </Project>

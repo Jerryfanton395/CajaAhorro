@@ -4,13 +4,25 @@ namespace CajaAhorro.Domain.Entidades;
 
 public class AhorroDbContext : DbContext
 {
+    #region Constructor
+    public AhorroDbContext(DbContextOptions<AhorroDbContext> options) : base(options)
+    {
+
+    }
+    #endregion
+
+    #region DbSet
     public DbSet<Socio> Socios { get; set; }
     public DbSet<Ahorro> Ahorros { get; set; }
     public DbSet<DetalleAhorro> DetallesAhorros { get; set; }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    #endregion
+
+    #region OnModelCreating
+    // Aqui es la base para configurar las entidades y relaciones de la base de datos
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        // Define que la base de datos se guardará en un archivo local llamado caja_ahorro.db
-        optionsBuilder.UseSqlite("Data Source=caja_ahorro.db");
+        base.OnModelCreating(modelBuilder);
     }
+    #endregion
 }

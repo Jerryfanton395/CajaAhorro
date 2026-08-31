@@ -1,13 +1,9 @@
+using CajaAhorro.Utilities;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Habilita peticiones desde Electron (CORS)
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AllowElectron",
-        policy => policy.AllowAnyOrigin()
-                        .AllowAnyHeader()
-                        .AllowAnyMethod());
-});
+// Inject dependencies
+builder.InjectDependencies();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -19,6 +15,7 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+    app.MigrateDatabase();
 }
 
 app.UseCors("AllowElectron");

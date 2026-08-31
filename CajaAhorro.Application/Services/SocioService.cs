@@ -1,16 +1,22 @@
-﻿using CajaAhorro.Domain;
+﻿using CajaAhorro.Application.DTOs;
+using CajaAhorro.Application.Interfaces;
 using CajaAhorro.Domain.Entidades;
-using CajaAhorro.Application.DTOs;
 using Microsoft.EntityFrameworkCore;
 
 namespace CajaAhorro.Application.Services;
 
-public class SocioService
+public class SocioService : ISocioService
 {
+    private readonly AhorroDbContext _context;
+
+    public SocioService(AhorroDbContext context)
+    {
+        _context = context;
+    }
+
     public async Task<List<SocioRespuestaDto>> ObtenerSociosAsync()
     {
-        using var context = new AhorroDbContext();
-        return await context.Socios
+        return await _context.Socios
             .Select(s => new SocioRespuestaDto
             {
                 Id = s.Id,
@@ -23,7 +29,6 @@ public class SocioService
 
     public async Task<SocioRespuestaDto> RegistrarSocioAsync(CrearSocioDto dto)
     {
-        using var context = new AhorroDbContext();
         var socio = new Socio
         {
             Nombre = dto.Nombre,
@@ -31,8 +36,8 @@ public class SocioService
             FechaRegistro = DateTime.Now
         };
 
-        context.Socios.Add(socio);
-        await context.SaveChangesAsync();
+        _context.Socios.Add(socio);
+        await _context.SaveChangesAsync();
 
         return new SocioRespuestaDto
         {

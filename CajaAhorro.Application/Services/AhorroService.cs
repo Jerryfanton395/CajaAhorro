@@ -1,16 +1,21 @@
-﻿using CajaAhorro.Domain;
+﻿using CajaAhorro.Application.Interfaces;
 using CajaAhorro.Domain.Entidades;
 using Microsoft.EntityFrameworkCore;
 
 namespace CajaAhorro.Application.Services;
 
-public class AhorroService
+public class AhorroService : IAhorroService
 {
+    private readonly AhorroDbContext _context;
+
+    public AhorroService(AhorroDbContext ahorroDbContext)
+    {
+        _context = ahorroDbContext;
+    }
+
     // Módulo 1: Crear una nueva tanda / plan de ahorro
     public async Task<int> CrearAhorroAsync(string nombre, int totalNumeros, decimal montoPorNumero, DateTime fechaInicio, DateTime fechaPago)
     {
-        using var context = new AhorroDbContext();
-
         var nuevoAhorro = new Ahorro
         {
             Nombre = nombre,
@@ -21,8 +26,8 @@ public class AhorroService
             Finalizada = false
         };
 
-        context.Ahorros.Add(nuevoAhorro);
-        await context.SaveChangesAsync();
+        _context.Ahorros.Add(nuevoAhorro);
+        await _context.SaveChangesAsync();
 
         return nuevoAhorro.Id; // Devuelve el ID generado para usarlo en las asignaciones
     }
@@ -30,10 +35,9 @@ public class AhorroService
     // Módulo 3: Asignar un número y fecha a una persona
     public async Task AsignarNumeroAsync(int ahorroId, int socioId, int numeroAsignado, DateTime fechaCobro)
     {
-        using var context = new AhorroDbContext();
 
         // Obtenemos el ahorro para saber el monto total que le tocará recibir
-        var ahorro = await context.Ahorros.FindAsync(ahorroId);
+        var ahorro = await _context.Ahorros.FindAsync(ahorroId);
         if (ahorro == null) return;
 
         decimal montoAEntregar = ahorro.TotalNumeros * ahorro.MontoPorNumero;
@@ -47,16 +51,15 @@ public class AhorroService
             MontoAEntregar = montoAEntregar
         };
 
-        context.DetallesAhorros.Add(detalle);
-        await context.SaveChangesAsync();
+        _context.DetallesAhorros.Add(detalle);
+        await _context.SaveChangesAsync();
     }
 
     // Módulo 4: Obtener la lista completa del ahorro con sus números y socios asignados
     public async Task<Ahorro?> ObtenerDetalleCompletoAsync(int ahorroId)
     {
-        using var context = new AhorroDbContext();
 
-        return await context.Ahorros
+        return await _context.Ahorros
             .Include(a => a.ListaDetalles)
                 .ThenInclude(d => d.Persona)
             .FirstOrDefaultAsync(a => a.Id == ahorroId);
@@ -65,23 +68,20 @@ public class AhorroService
     // Módulo 5: Registrar un depósito
     public async Task RegistrarDepositoAsync(int ahorroId, decimal monto, string concepto)
     {
-        using var context = new AhorroDbContext();
         var movimiento = new DetalleAhorro
         {
             AhorroId = ahorroId,
             MontoAEntregar = monto
         };
 
-        context.DetallesAhorros.Add(movimiento);
-        await context.SaveChangesAsync();
+        _context.DetallesAhorros.Add(movimiento);
+        await _context.SaveChangesAsync();
     }
 
     // Módulo 6: Registrar un retiro
     public async Task<bool> RegistrarRetiroAsync(int ahorroId, decimal monto, string concepto)
     {
-        using var context = new AhorroDbContext();
-
-        var totalAcumulado = await context.DetallesAhorros
+        var totalAcumulado = await _context.DetallesAhorros
             .Where(d => d.AhorroId == ahorroId)
             .SumAsync(d => (decimal?)d.MontoAEntregar) ?? 0;
 
@@ -96,8 +96,8 @@ public class AhorroService
             MontoAEntregar = -monto
         };
 
-        context.DetallesAhorros.Add(movimiento);
-        await context.SaveChangesAsync();
+        _context.DetallesAhorros.Add(movimiento);
+        await _context.SaveChangesAsync();
         return true;
     }
 }

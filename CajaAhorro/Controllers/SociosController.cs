@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using CajaAhorro.Application.Services;
 using CajaAhorro.Application.DTOs;
+using CajaAhorro.Application.Interfaces;
 
 namespace CajaAhorro.Controllers;
 
@@ -8,7 +8,12 @@ namespace CajaAhorro.Controllers;
 [Route("api/[controller]")]
 public class SociosController : ControllerBase
 {
-    private readonly SocioService _socioService = new();
+    private readonly ISocioService _socioService;
+
+    public SociosController(ISocioService socioService)
+    {
+        _socioService = socioService;
+    }
 
     [HttpGet]
     public async Task<ActionResult<List<SocioRespuestaDto>>> ObtenerTodos()

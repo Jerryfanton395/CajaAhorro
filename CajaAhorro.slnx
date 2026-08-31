@@ -1,5 +1,14 @@
 <Solution>
-  <Project Path="CajaAhorro.Application/CajaAhorro.Application.csproj" />
-  <Project Path="CajaAhorro.Domain/CajaAhorro.Domain.csproj" />
-  <Project Path="CajaAhorro/CajaAhorro.csproj" />
+  <Folder Name="/01 - API/">
+    <Project Path="CajaAhorro/CajaAhorro.csproj" />
+  </Folder>
+  <Folder Name="/02 - Application/">
+    <Project Path="CajaAhorro.Application/CajaAhorro.Application.csproj" />
+  </Folder>
+  <Folder Name="/03 - Domain/">
+    <Project Path="CajaAhorro.Domain/CajaAhorro.Domain.csproj" />
+  </Folder>
+  <Folder Name="/git/">
+    <File Path=".gitignore" />
+  </Folder>
 </Solution>

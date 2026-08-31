@@ -361,3 +361,12 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+
+# Base de datos
+*.db
+
+# Migrations 
+**/Migrations/
+/CajaAhorro/caja_ahorro.db
+/CajaAhorro/caja_ahorro.db-shm
+/CajaAhorro/caja_ahorro.db-wal

@@ -1,6 +1,6 @@
 ﻿using CajaAhorro.Application;
 using CajaAhorro.Application.DTOs;
-using CajaAhorro.Application.Services;
+using CajaAhorro.Application.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CajaAhorro.Controllers;
@@ -9,7 +9,12 @@ namespace CajaAhorro.Controllers;
 [Route("api/[controller]")]
 public class AhorrosController : ControllerBase
 {
-    private readonly AhorroService _ahorroService = new();
+    private readonly IAhorroService _ahorroService;
+
+    public AhorrosController(IAhorroService ahorroService)
+    {
+        _ahorroService = ahorroService;
+    }
 
     [HttpPost("deposito")]
     public async Task<IActionResult> RegistrarDeposito([FromBody] RealizarMovimientoDto dto)
