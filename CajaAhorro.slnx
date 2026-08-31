@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="CajaAhorro.Application/CajaAhorro.Application.csproj" />
+  <Project Path="CajaAhorro.Domain/CajaAhorro.Domain.csproj" />
+  <Project Path="CajaAhorro/CajaAhorro.csproj" />
+</Solution>
